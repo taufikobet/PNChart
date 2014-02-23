@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.author       = { "Kevin" => "kevinchou.c@gmail.com" }
 
   s.platform     = :ios, '6.0'
-  s.source       = { :git => "https://github.com/kevinzhow/PNChart.git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/taufikobet/PNChart.git", :tag => s.version.to_s }
 
   s.ios.dependency 'UICountingLabel', '~> 1.0.0'
 
