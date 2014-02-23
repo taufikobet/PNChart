@@ -22,6 +22,8 @@
 
 @property (strong, nonatomic) NSMutableArray *chartPath; //Array of line path, one for each line.
 
+@property (assign, nonatomic) CGPoint currentPoint;
+
 - (void)setDefaultValues;
 
 @end
@@ -46,6 +48,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setDefaultValues];
+        self.clipsToBounds = NO;
     }
     return self;
 }
@@ -56,13 +59,13 @@
 {
     
     CGFloat yStep = (_yValueMax-_yValueMin) / _yLabelNum;
-	CGFloat yStepHeight = _chartCavanHeight / _yLabelNum;
+	CGFloat yStepHeight = _chartCanvasHeight / _yLabelNum;
     
     
     NSInteger index = 0;
 	NSInteger num = _yLabelNum+1;
 	while (num > 0) {
-		PNChartLabel * label = [[PNChartLabel alloc] initWithFrame:CGRectMake(0.0, (_chartCavanHeight - index * yStepHeight), _chartMargin, _yLabelHeight)];
+		PNChartLabel * label = [[PNChartLabel alloc] initWithFrame:CGRectMake(0.0, (_chartCanvasHeight - index * yStepHeight), _chartMargin, _yLabelHeight)];
 		[label setTextAlignment:NSTextAlignmentRight];
 		label.text = [NSString stringWithFormat:@"%1.f",_yValueMin + (yStep * index)];
 		[self addSubview:label];
@@ -77,12 +80,12 @@
     _xLabels = xLabels;
     NSString* labelText;
     if(_showLabel){
-        _xLabelWidth = _chartCavanWidth/[xLabels count];
+        _xLabelWidth = _chartCanvasWidth/[xLabels count];
         
         for(int index = 0; index < xLabels.count; index++)
         {
             labelText = xLabels[index];
-            PNChartLabel * label = [[PNChartLabel alloc] initWithFrame:CGRectMake(2*_chartMargin +  (index * _xLabelWidth) - (_xLabelWidth / 2), _chartMargin + _chartCavanHeight, _xLabelWidth, _chartMargin)];
+            PNChartLabel * label = [[PNChartLabel alloc] initWithFrame:CGRectMake(2*_chartMargin +  (index * _xLabelWidth) - (_xLabelWidth / 2), _chartMargin + _chartCanvasHeight, _xLabelWidth, _chartMargin)];
             [label setTextAlignment:NSTextAlignmentCenter];
             label.text = labelText;
             [self addSubview:label];
@@ -131,76 +134,105 @@
     
 }
 
+- (UIImage *)createCircleWithSize:(CGSize)size andBadgeValue:(CGFloat)badgeValue {
+    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
+    
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+	CGRect circleRect = CGRectMake(0, 0, size.width, size.height);
+	circleRect = CGRectInset(circleRect, 2, 2);
+    
+    CGContextSetFillColorWithColor(ctx, [UIColor redColor].CGColor);
+    CGContextFillEllipseInRect(ctx, circleRect);
+    
+    [[UIColor whiteColor] set];
+    
+    UIFont *font = [UIFont fontWithName:@"Helvetica" size:12.0f];
+    
+    NSString *badgeString = [@(badgeValue) stringValue];
+
+    [badgeString drawInRect:circleRect withFont:font lineBreakMode:NSLineBreakByTruncatingTail alignment:NSTextAlignmentCenter];
+
+    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return scaledImage;
+}
+
 -(void)strokeChart
 {
     _chartPath = [[NSMutableArray alloc] init];
+    
     //Draw each line
-    for (NSUInteger lineIndex = 0; lineIndex < self.chartData.count; lineIndex++) {
-        PNLineChartData *chartData = self.chartData[lineIndex];
-        CAShapeLayer *chartLine = (CAShapeLayer *) self.chartLineArray[lineIndex];
-        CGFloat yValue;
-        CGFloat innerGrade;
-        CGPoint point;
-        
-        UIGraphicsBeginImageContext(self.frame.size);
-        UIBezierPath * progressline = [UIBezierPath bezierPath];
-        [_chartPath addObject:progressline];
-        
+    PNLineChartData *chartData = self.chartData.firstObject;
+    CAShapeLayer *chartLineShapeLayer = (CAShapeLayer *) self.chartLineArray.firstObject;
 
-        
-        if(!_showLabel){
-            _chartCavanHeight = self.frame.size.height - 2*_yLabelHeight;
-            _chartCavanWidth = self.frame.size.width;
-            _chartMargin = 0.0;
-            _xLabelWidth = (_chartCavanWidth / ([_xLabels count] -1));
-        }
-        
-        NSMutableArray * linePointsArray = [[NSMutableArray alloc] init];
-        [progressline setLineWidth:3.0];
-        [progressline setLineCapStyle:kCGLineCapRound];
-        [progressline setLineJoinStyle:kCGLineJoinRound];
-        
-        
-        
-        
-        for (NSUInteger i = 0; i < chartData.itemCount; i++) {
-
-            yValue = chartData.getData(i).y;
-            
-            innerGrade = (yValue - _yValueMin) / ( _yValueMax - _yValueMin);
-            
-            point = CGPointMake(2*_chartMargin +  (i * _xLabelWidth), _chartCavanHeight - (innerGrade * _chartCavanHeight) + ( _yLabelHeight /2 ));
-            
-            if (i != 0) {
-                [progressline addLineToPoint:point];
-            }
-            
-            [progressline moveToPoint:point];
-            [linePointsArray addObject:[NSValue valueWithCGPoint:point]];
-        }
-        [_pathPoints addObject:[linePointsArray copy]];
-        // setup the color of the chart line
-        if (chartData.color) {
-            chartLine.strokeColor = [chartData.color CGColor];
-        }else{
-            chartLine.strokeColor = [PNGreen CGColor];
-        }
-        
-        [progressline stroke];
-        
-        chartLine.path = progressline.CGPath;
-        
-        CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-        pathAnimation.duration = 1.0;
-        pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        pathAnimation.fromValue = [NSNumber numberWithFloat:0.0f];
-        pathAnimation.toValue = [NSNumber numberWithFloat:1.0f];
-        [chartLine addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
-        
-        chartLine.strokeEnd = 1.0;
-        
-        UIGraphicsEndImageContext();
+    if(!_showLabel) {
+        _chartCanvasHeight = self.frame.size.height - 2*_yLabelHeight;
+        _chartCanvasWidth = self.frame.size.width;
+        _chartMargin = 0.0;
+        _xLabelWidth = (_chartCanvasWidth / ([_xLabels count] -1));
     }
+    
+    UIBezierPath * bezierPath = [UIBezierPath bezierPath];
+    [bezierPath setLineWidth:3.0];
+    [bezierPath setLineCapStyle:kCGLineCapRound];
+    [bezierPath setLineJoinStyle:kCGLineJoinRound];
+    
+    [_chartPath addObject:bezierPath];
+    
+    NSMutableArray *linePoints = [NSMutableArray array];
+    
+    for (NSUInteger i = 0; i < chartData.itemCount; i++) {
+        
+        CGFloat yValue = chartData.getData(i).y;
+        
+        CGFloat innerGrade = (yValue - _yValueMin) / ( _yValueMax - _yValueMin);
+        
+        CGPoint point = CGPointMake(2*_chartMargin +  (i * _xLabelWidth), _chartCanvasHeight - (innerGrade * _chartCanvasHeight) + ( _yLabelHeight /2 ));
+        
+        if (i > 0) {
+            [bezierPath addLineToPoint:point];
+        }
+        
+        [bezierPath moveToPoint:point];
+        [linePoints addObject:[NSValue valueWithCGPoint:point]];
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        imageView.image = [self createCircleWithSize:imageView.bounds.size andBadgeValue:chartData.getData(i).y];
+        [self addSubview:imageView];
+        imageView.center = point;
+
+//        UIView *circleView = [[UIView alloc] initWithFrame:CGRectMake(0,0,15,15)];
+//        circleView.alpha = 1.0;
+//        circleView.layer.cornerRadius = 15/2;
+//        circleView.backgroundColor = [UIColor blueColor];
+//        circleView.center = point;
+//        [self addSubview:circleView];
+        
+        //TODO: Create UIImage rather than UIView
+    }
+    
+    [_pathPoints addObject:[linePoints copy]];
+    // setup the color of the chart line
+    if (chartData.color) {
+        chartLineShapeLayer.strokeColor = [chartData.color CGColor];
+    }else{
+        chartLineShapeLayer.strokeColor = [PNGreen CGColor];
+    }
+    
+    [bezierPath stroke];
+    
+    chartLineShapeLayer.path = bezierPath.CGPath;
+    
+    CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    pathAnimation.duration = 1.0;
+    pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    pathAnimation.fromValue = [NSNumber numberWithFloat:0.0f];
+    pathAnimation.toValue = [NSNumber numberWithFloat:1.0f];
+    [chartLineShapeLayer addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
+    
+    chartLineShapeLayer.strokeEnd = 1.0;
 }
 
 - (void)setChartData:(NSArray *)data {
@@ -272,9 +304,9 @@
     _yLabelHeight = [[[[PNChartLabel alloc] init] font] pointSize];
     
     _chartMargin = 30;
-
-    _chartCavanWidth = self.frame.size.width - _chartMargin *2;
-    _chartCavanHeight = self.frame.size.height - _chartMargin * 2;
+    
+    _chartCanvasWidth = self.frame.size.width - _chartMargin *2;
+    _chartCanvasHeight = self.frame.size.height - _chartMargin * 2;
 }
 
 @end

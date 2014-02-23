@@ -45,9 +45,9 @@
 
 @property (nonatomic) CGFloat yLabelHeight;
 
-@property (nonatomic) CGFloat chartCavanHeight;
+@property (nonatomic) CGFloat chartCanvasHeight;
 
-@property (nonatomic) CGFloat chartCavanWidth;
+@property (nonatomic) CGFloat chartCanvasWidth;
 
 @property (nonatomic) CGFloat chartMargin;
 
