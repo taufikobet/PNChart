@@ -50,9 +50,6 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="Tha-Wr-sPW" kind="push" identifier="lineChart" id="XHj-XM-h67"/>
-                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="sGJ-nJ-Evy" style="IBUITableViewCellStyleDefault" id="uiU-qo-XNI">
                                         <rect key="frame" x="0.0" y="108" width="320" height="44"/>
@@ -70,9 +67,6 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="Tha-Wr-sPW" kind="push" identifier="barChart" id="BAm-LA-QbM"/>
-                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Bn9-8g-5UP" style="IBUITableViewCellStyleDefault" id="xKf-5i-9cT">
                                         <rect key="frame" x="0.0" y="152" width="320" height="44"/>
@@ -90,9 +84,6 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="Tha-Wr-sPW" kind="push" identifier="circleChart" id="WSA-oe-ed1"/>
-                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -125,7 +116,4 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
-    <inferredMetricsTieBreakers>
-        <segue reference="XHj-XM-h67"/>
-    </inferredMetricsTieBreakers>
 </document>

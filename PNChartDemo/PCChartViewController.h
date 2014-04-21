@@ -8,7 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, PCChartType)
+{
+    PCChartTypeLine,
+    PCChartTypeBar,
+    PCChartTypeCircle
+};
+
 @interface PCChartViewController : UIViewController
 
+-(instancetype)initWithChartType:(PCChartType)chartType;
 
 @end

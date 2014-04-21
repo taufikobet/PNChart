@@ -7,6 +7,7 @@
 //
 
 #import "PCChartsTableViewController.h"
+#import "PCChartViewController.h"
 
 @interface PCChartsTableViewController ()
 @end
@@ -57,6 +58,28 @@
 
 -(void)userClickedOnLinePoint:(CGPoint)point lineIndex:(NSInteger)lineIndex{
     NSLog(@"Click on line %f, %f, line index is %d",point.x, point.y, (int)lineIndex);
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    PCChartType chartType;
+    
+    switch (indexPath.row) {
+        case 0:
+            chartType = PCChartTypeLine;
+            break;
+        case 1:
+            chartType = PCChartTypeBar;
+            break;
+        case 2:
+            chartType = PCChartTypeCircle;
+            break;
+        default:
+            break;
+    }
+    
+    PCChartViewController *viewController = [[PCChartViewController alloc] initWithChartType:chartType];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end
