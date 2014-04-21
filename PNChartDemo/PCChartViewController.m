@@ -79,11 +79,11 @@
         {
             //Add BarChart
             
-            UILabel * barChartLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 90, SCREEN_WIDTH, 30)];
-            barChartLabel.text = @"Bar Chart";
-            barChartLabel.textColor = PNFreshGreen;
-            barChartLabel.font = [UIFont fontWithName:@"Avenir-Medium" size:23.0];
-            barChartLabel.textAlignment = NSTextAlignmentCenter;
+//            UILabel * barChartLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 90, SCREEN_WIDTH, 30)];
+//            barChartLabel.text = @"Bar Chart";
+//            barChartLabel.textColor = PNFreshGreen;
+//            barChartLabel.font = [UIFont fontWithName:@"Avenir-Medium" size:23.0];
+//            barChartLabel.textAlignment = NSTextAlignmentCenter;
             
             self.barChart = [[PNBarChart alloc] initWithFrame:self.view.frame];
             self.barChart.backgroundColor = [UIColor clearColor];
@@ -92,7 +92,7 @@
             [self.barChart setYValues:@[@1,@24,@12,@18,@30,@10,@21]];
             [self.barChart setStrokeColors:@[PNGreen,PNGreen,PNRed,PNGreen,PNGreen,PNYellow,PNGreen]];
             
-            [self.view addSubview:barChartLabel];
+            //[self.view addSubview:barChartLabel];
             [self.view addSubview:self.barChart];
             
             self.title = @"Bar Chart";

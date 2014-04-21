@@ -40,18 +40,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    
-    UIViewController * viewController = [segue destinationViewController];
-    viewController.automaticallyAdjustsScrollViewInsets = YES;
-    viewController.edgesForExtendedLayout = UIRectEdgeNone;
-    
-}
-
 -(void)userClickedOnLineKeyPoint:(CGPoint)point lineIndex:(NSInteger)lineIndex andPointIndex:(NSInteger)pointIndex{
     NSLog(@"Click Key on line %f, %f line index is %d and point index is %d",point.x, point.y,(int)lineIndex, (int)pointIndex);
 }
@@ -62,7 +50,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PCChartType chartType;
+    PCChartType chartType = PCChartTypeBar;
     
     switch (indexPath.row) {
         case 0:

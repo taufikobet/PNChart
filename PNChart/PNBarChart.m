@@ -42,7 +42,6 @@
     _yValues = yValues;
     [self setYLabels:yValues];
 
-    _xLabelWidth = (self.frame.size.width - chartMargin*2)/[_yValues count];
 }
 
 -(void)setYLabels:(NSArray *)yLabels
@@ -72,7 +71,6 @@
     _xLabels = xLabels;
 
     if (_showLabel) {
-        _xLabelWidth = (self.frame.size.width - chartMargin*2)/[xLabels count];
 
         for(int index = 0; index < xLabels.count; index++)
         {
@@ -81,7 +79,7 @@
             [label setTextAlignment:NSTextAlignmentCenter];
             label.text = labelText;
             [_labels addObject:label];
-            [self addSubview:label];
+            //[self addSubview:label];
         }
     }
 
@@ -95,22 +93,28 @@
 -(void)strokeChart
 {
     [self viewCleanupForCollection:_bars];
-    CGFloat chartCavanHeight = self.frame.size.height - chartMargin * 2 - 40.0;
+    CGFloat chartCanvasHeight = self.frame.size.height - chartMargin * 2 - 40.0;
     NSInteger index = 0;
+    
+    _xLabelWidth = (self.frame.size.width - chartMargin*2)/[_yValues count];
 
     for (NSString * valueString in _yValues) {
         float value = [valueString floatValue];
 
         float grade = (float)value / (float)_yValueMax;
-		PNBar * bar;
+		
+        PNBar *bar;
+        
         if (_showLabel) {
-            bar = [[PNBar alloc] initWithFrame:CGRectMake((index *  _xLabelWidth + chartMargin + _xLabelWidth * 0.25), self.frame.size.height - chartCavanHeight - 30.0, _xLabelWidth * 0.5, chartCavanHeight)];
+            bar = [[PNBar alloc] initWithFrame:CGRectMake((index *  _xLabelWidth + chartMargin + _xLabelWidth * 0.25), self.frame.size.height - chartCanvasHeight - 30.0, _xLabelWidth * 0.5, chartCanvasHeight)];
         }else{
-            bar = [[PNBar alloc] initWithFrame:CGRectMake((index *  _xLabelWidth + chartMargin + _xLabelWidth * 0.25), self.frame.size.height - chartCavanHeight , _xLabelWidth * 0.6, chartCavanHeight)];
+            bar = [[PNBar alloc] initWithFrame:CGRectMake((index *  _xLabelWidth + chartMargin + _xLabelWidth * 0.25), self.frame.size.height - chartCanvasHeight , _xLabelWidth * 0.6, chartCanvasHeight)];
         }
+        
         bar.backgroundColor = _barBackgroundColor;
         bar.barColor = [self barColorAtIndex:index];
         bar.grade = grade;
+        
         [_bars addObject:bar];
         [self addSubview:bar];
 

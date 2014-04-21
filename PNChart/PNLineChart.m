@@ -68,7 +68,7 @@
 		PNChartLabel * label = [[PNChartLabel alloc] initWithFrame:CGRectMake(0.0, (_chartCanvasHeight - index * yStepHeight), _chartMargin, _yLabelHeight)];
 		[label setTextAlignment:NSTextAlignmentRight];
 		label.text = [NSString stringWithFormat:@"%1.f",_yValueMin + (yStep * index)];
-		[self addSubview:label];
+		//[self addSubview:label];
         index +=1 ;
 		num -= 1;
 	}
@@ -88,7 +88,7 @@
             PNChartLabel * label = [[PNChartLabel alloc] initWithFrame:CGRectMake(2*_chartMargin +  (index * _xLabelWidth) - (_xLabelWidth / 2), _chartMargin + _chartCanvasHeight, _xLabelWidth, _chartMargin)];
             [label setTextAlignment:NSTextAlignmentCenter];
             label.text = labelText;
-            [self addSubview:label];
+            //[self addSubview:label];
         }
         
     }else{
@@ -257,6 +257,7 @@
             chartLine.fillColor = [[UIColor whiteColor] CGColor];
             chartLine.lineWidth = 3.0;
             chartLine.strokeEnd = 0.0;
+            
             [self.layer addSublayer:chartLine];
             [self.chartLineArray addObject:chartLine];
             
