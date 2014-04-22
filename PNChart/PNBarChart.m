@@ -19,6 +19,9 @@
 - (UIColor *)barColorAtIndex:(NSUInteger)index;
 
 @property (nonatomic, strong) UIView *backgroundView;
+@property (nonatomic, strong) UIView *lowerBoundHorizontalLineView;
+@property (nonatomic, strong) UIView *upperBoundHorizontalLineView;
+@property (nonatomic, strong) UIView *verticalLineView;
 @end
 
 @implementation PNBarChart
@@ -96,6 +99,9 @@
 {
     [self viewCleanupForCollection:_bars];
     
+    [self.verticalLineView removeFromSuperview];
+    [self.upperBoundHorizontalLineView removeFromSuperview];
+    [self.lowerBoundHorizontalLineView removeFromSuperview];
     [self.backgroundView removeFromSuperview];
     
     CGFloat insetMarginPercentage = 0.85;
@@ -130,11 +136,23 @@
         index++;
     }
     
-    self.backgroundView = [[UIView alloc] initWithFrame:CGRectMake(xStartPosition, yStartPosition, chartCanvasWidth, chartCanvasHeight)];
+    self.backgroundView = [[UIView alloc] initWithFrame:CGRectIntegral(CGRectMake(xStartPosition, yStartPosition, chartCanvasWidth, chartCanvasHeight))];
     self.backgroundView.backgroundColor = [UIColor redColor];
     self.backgroundView.alpha = 0.5;
     
-    [self addSubview:self.backgroundView];
+    //[self addSubview:self.backgroundView];
+    
+    self.lowerBoundHorizontalLineView = [[UIView alloc] initWithFrame:CGRectIntegral(CGRectMake(xStartPosition, yStartPosition + chartCanvasHeight, chartCanvasWidth, 2))];
+    self.lowerBoundHorizontalLineView.backgroundColor = [UIColor lightGrayColor];
+    [self addSubview:self.lowerBoundHorizontalLineView];
+    
+    self.upperBoundHorizontalLineView = [[UIView alloc] initWithFrame:CGRectIntegral(CGRectMake(xStartPosition, yStartPosition - 1, chartCanvasWidth, 2))];
+    self.upperBoundHorizontalLineView.backgroundColor = [UIColor lightGrayColor];
+    [self addSubview:self.upperBoundHorizontalLineView];
+    
+    self.verticalLineView = [[UIView alloc] initWithFrame:CGRectIntegral(CGRectMake(xStartPosition, yStartPosition, 2, chartCanvasHeight))];
+    self.verticalLineView.backgroundColor = [UIColor lightGrayColor];
+    [self addSubview:self.verticalLineView];
 }
 
 - (void)viewCleanupForCollection:(NSMutableArray*)array

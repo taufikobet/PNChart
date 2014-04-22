@@ -156,9 +156,9 @@
     
     UIBezierPath * bezierPath = [UIBezierPath bezierPath];
     
-    [bezierPath setLineWidth:3.0];
-    [bezierPath setLineCapStyle:kCGLineCapRound];
-    [bezierPath setLineJoinStyle:kCGLineJoinRound];
+    [bezierPath setLineWidth:2.0];
+    [bezierPath setLineCapStyle:kCGLineCapButt];
+    [bezierPath setLineJoinStyle:kCGLineJoinBevel];
     
     [_chartPath addObject:bezierPath];
     
@@ -173,8 +173,8 @@
         
         CGFloat innerGrade = yValue / _yValueMax;
         
-        CGFloat xPoint = i * xLabelWidth + (xLabelWidth / 2) + xStartPosition;
-        CGFloat yPoint = chartCanvasHeight - (innerGrade * chartCanvasHeight) + yStartPosition;
+        CGFloat xPoint = ceilf(i * xLabelWidth + (xLabelWidth / 2) + xStartPosition);
+        CGFloat yPoint = ceilf(chartCanvasHeight - (innerGrade * chartCanvasHeight) + yStartPosition);
         
         CGPoint point = CGPointMake(xPoint, yPoint);
         
@@ -217,8 +217,8 @@
     pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     pathAnimation.fromValue = [NSNumber numberWithFloat:0.0f];
     pathAnimation.toValue = [NSNumber numberWithFloat:1.0f];
+
     [chartLineShapeLayer addAnimation:pathAnimation forKey:@"strokeEndAnimation"];
-    
     chartLineShapeLayer.strokeEnd = 1.0;
 }
 
@@ -241,10 +241,10 @@
             
             // create as many chart line layers as there are data-lines
             CAShapeLayer *chartLine = [CAShapeLayer layer];
-            chartLine.lineCap   = kCALineCapRound;
+            chartLine.lineCap   = kCALineCapButt;
             chartLine.lineJoin  = kCALineJoinBevel;
             chartLine.fillColor = [[UIColor whiteColor] CGColor];
-            chartLine.lineWidth = 3.0;
+            chartLine.lineWidth = 2.0;
             chartLine.strokeEnd = 0.0;
             
             [self.layer addSublayer:chartLine];

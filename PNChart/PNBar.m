@@ -43,7 +43,7 @@
 	if (_barColor) {
 		_chartLine.strokeColor = [_barColor CGColor];
 	}else{
-		_chartLine.strokeColor = [PNGreen CGColor];
+		_chartLine.strokeColor = [PNBlue CGColor];
 	}
     
     CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
