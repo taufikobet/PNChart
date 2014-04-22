@@ -142,11 +142,11 @@
     
     //[self addSubview:self.backgroundView];
     
-    self.lowerBoundHorizontalLineView = [[UIView alloc] initWithFrame:CGRectIntegral(CGRectMake(xStartPosition, yStartPosition + chartCanvasHeight, chartCanvasWidth, 2))];
+    self.lowerBoundHorizontalLineView = [[UIView alloc] initWithFrame:CGRectIntegral(CGRectMake(xStartPosition, yStartPosition + chartCanvasHeight, chartCanvasWidth + 1, 2))];
     self.lowerBoundHorizontalLineView.backgroundColor = [UIColor lightGrayColor];
     [self addSubview:self.lowerBoundHorizontalLineView];
     
-    self.upperBoundHorizontalLineView = [[UIView alloc] initWithFrame:CGRectIntegral(CGRectMake(xStartPosition, yStartPosition - 1, chartCanvasWidth, 2))];
+    self.upperBoundHorizontalLineView = [[UIView alloc] initWithFrame:CGRectIntegral(CGRectMake(xStartPosition, yStartPosition - 1, chartCanvasWidth + 1, 2))];
     self.upperBoundHorizontalLineView.backgroundColor = [UIColor lightGrayColor];
     [self addSubview:self.upperBoundHorizontalLineView];
     

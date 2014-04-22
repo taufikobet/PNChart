@@ -24,6 +24,8 @@
 
 @property (assign, nonatomic) CGPoint currentPoint;
 
+@property (nonatomic, strong) UIView *verticalLineView;
+
 - (void)setDefaultValues;
 
 @end
@@ -137,6 +139,8 @@
 
 -(void)strokeChart
 {
+    [self.verticalLineView removeFromSuperview];
+    
     _chartPath = [[NSMutableArray alloc] init];
     
     //Draw each line
@@ -184,21 +188,12 @@
         
         [bezierPath moveToPoint:point];
         [linePoints addObject:[NSValue valueWithCGPoint:point]];
-        
-//        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-//        imageView.image = [self createCircleWithSize:imageView.bounds.size andBadgeValue:chartData.getData(i).y];
-//        [self addSubview:imageView];
-//        imageView.center = point;
 
-//        UIView *circleView = [[UIView alloc] initWithFrame:CGRectMake(0,0,15,15)];
-//        circleView.alpha = 1.0;
-//        circleView.layer.cornerRadius = 15/2;
-//        circleView.backgroundColor = [UIColor blueColor];
-//        circleView.center = point;
-//        [self addSubview:circleView];
-        
-        //TODO: Create UIImage rather than UIView
     }
+    
+    self.verticalLineView = [[UIView alloc] initWithFrame:CGRectIntegral(CGRectMake(chartCanvasWidth + xStartPosition, yStartPosition, 2, chartCanvasHeight))];
+    self.verticalLineView.backgroundColor = [UIColor redColor];
+    [self addSubview:self.verticalLineView];
     
     [_pathPoints addObject:[linePoints copy]];
     // setup the color of the chart line
