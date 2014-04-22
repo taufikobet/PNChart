@@ -93,11 +93,13 @@
 -(void)strokeChart
 {
     [self viewCleanupForCollection:_bars];
+    
+    CGFloat chartInsetMargin = 200;
      
-    CGFloat chartCanvasHeight = self.frame.size.height;
+    CGFloat chartCanvasHeight = self.frame.size.height - chartInsetMargin;
     NSInteger index = 0;
     
-    _xLabelWidth = (self.frame.size.width) / [_yValues count];
+    _xLabelWidth = (self.frame.size.width - chartInsetMargin) / [_yValues count];
 
     for (NSString * valueString in _yValues) {
         
@@ -105,8 +107,8 @@
 
         float grade = (float)value / (float)_yValueMax;
 
-        CGFloat xPoint = (index *  _xLabelWidth);
-        CGFloat yPoint = self.frame.size.height - chartCanvasHeight;
+        CGFloat xPoint = (index *  _xLabelWidth) + (chartInsetMargin/2);
+        CGFloat yPoint = self.frame.size.height - chartCanvasHeight - (chartInsetMargin/2);
         
         PNBar *bar = [[PNBar alloc] initWithFrame:CGRectIntegral(CGRectMake(xPoint, yPoint, _xLabelWidth, chartCanvasHeight))];
 
