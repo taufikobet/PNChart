@@ -17,6 +17,8 @@
 }
 
 - (UIColor *)barColorAtIndex:(NSUInteger)index;
+
+@property (nonatomic, strong) UIView *backgroundView;
 @end
 
 @implementation PNBarChart
@@ -94,12 +96,18 @@
 {
     [self viewCleanupForCollection:_bars];
     
-    CGFloat chartInsetMargin = 200;
-     
-    CGFloat chartCanvasHeight = self.frame.size.height - chartInsetMargin;
+    [self.backgroundView removeFromSuperview];
+    
+    CGFloat insetMarginPercentage = 0.85;
+    
+    CGFloat chartCanvasWidth = self.frame.size.width * insetMarginPercentage;
+    CGFloat chartCanvasHeight = self.frame.size.height * insetMarginPercentage;
+    CGFloat xStartPosition = ceilf((self.frame.size.width - chartCanvasWidth) / 2);
+    CGFloat yStartPosition = ceilf((self.frame.size.height - chartCanvasHeight) / 2);
+    
     NSInteger index = 0;
     
-    _xLabelWidth = (self.frame.size.width - chartInsetMargin) / [_yValues count];
+    _xLabelWidth = chartCanvasWidth / [_yValues count];
 
     for (NSString * valueString in _yValues) {
         
@@ -107,8 +115,8 @@
 
         float grade = (float)value / (float)_yValueMax;
 
-        CGFloat xPoint = (index *  _xLabelWidth) + (chartInsetMargin/2);
-        CGFloat yPoint = self.frame.size.height - chartCanvasHeight - (chartInsetMargin/2);
+        CGFloat xPoint = (index * _xLabelWidth) + xStartPosition;
+        CGFloat yPoint = self.frame.size.height - chartCanvasHeight - yStartPosition;
         
         PNBar *bar = [[PNBar alloc] initWithFrame:CGRectIntegral(CGRectMake(xPoint, yPoint, _xLabelWidth, chartCanvasHeight))];
 
@@ -121,6 +129,11 @@
 
         index++;
     }
+    
+    self.backgroundView = [[UIView alloc] initWithFrame:CGRectMake(xStartPosition, yStartPosition, chartCanvasWidth, chartCanvasHeight)];
+    self.backgroundView.backgroundColor = [UIColor redColor];
+    self.backgroundView.alpha = 0.5;
+    [self addSubview:self.backgroundView];
 }
 
 - (void)viewCleanupForCollection:(NSMutableArray*)array
