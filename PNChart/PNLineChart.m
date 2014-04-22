@@ -80,7 +80,7 @@
     _xLabels = xLabels;
     NSString* labelText;
     if(_showLabel){
-        _xLabelWidth = _chartCanvasWidth/[xLabels count];
+        //_xLabelWidth = _chartCanvasWidth/[xLabels count];
         
         for(int index = 0; index < xLabels.count; index++)
         {
@@ -88,11 +88,12 @@
             PNChartLabel * label = [[PNChartLabel alloc] initWithFrame:CGRectMake(2*_chartMargin +  (index * _xLabelWidth) - (_xLabelWidth / 2), _chartMargin + _chartCanvasHeight, _xLabelWidth, _chartMargin)];
             [label setTextAlignment:NSTextAlignmentCenter];
             label.text = labelText;
+            
             //[self addSubview:label];
         }
         
     }else{
-        _xLabelWidth = (self.frame.size.width)/[xLabels count];
+        //_xLabelWidth = (self.frame.size.width)/[xLabels count];
     }
     
 }
@@ -134,31 +135,6 @@
     
 }
 
-- (UIImage *)createCircleWithSize:(CGSize)size andBadgeValue:(CGFloat)badgeValue {
-    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
-    
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-    
-	CGRect circleRect = CGRectMake(0, 0, size.width, size.height);
-	circleRect = CGRectInset(circleRect, 2, 2);
-    
-    CGContextSetFillColorWithColor(ctx, [UIColor redColor].CGColor);
-    CGContextFillEllipseInRect(ctx, circleRect);
-    
-    [[UIColor whiteColor] set];
-    
-    UIFont *font = [UIFont fontWithName:@"Helvetica" size:12.0f];
-    
-    NSString *badgeString = [@(badgeValue) stringValue];
-
-    [badgeString drawInRect:circleRect withFont:font lineBreakMode:NSLineBreakByTruncatingTail alignment:NSTextAlignmentCenter];
-
-    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return scaledImage;
-}
-
 -(void)strokeChart
 {
     _chartPath = [[NSMutableArray alloc] init];
@@ -167,12 +143,9 @@
     PNLineChartData *chartData = self.chartData.firstObject;
     CAShapeLayer *chartLineShapeLayer = (CAShapeLayer *) self.chartLineArray.firstObject;
 
-    if(!_showLabel) {
-        _chartCanvasHeight = self.frame.size.height - 2*_yLabelHeight;
-        _chartCanvasWidth = self.frame.size.width;
-        _chartMargin = 0.0;
-        _xLabelWidth = (_chartCanvasWidth / ([_xLabels count] -1));
-    }
+    _chartCanvasHeight = self.frame.size.height;
+    _chartCanvasWidth = self.frame.size.width;
+    _chartMargin = 0.0;
     
     UIBezierPath * bezierPath = [UIBezierPath bezierPath];
     [bezierPath setLineWidth:3.0];
@@ -181,15 +154,21 @@
     
     [_chartPath addObject:bezierPath];
     
+    CGFloat xLabelWidth = (self.frame.size.width) / chartData.itemCount;
+    NSLog(@"%@", @(xLabelWidth));
+    
     NSMutableArray *linePoints = [NSMutableArray array];
     
     for (NSUInteger i = 0; i < chartData.itemCount; i++) {
         
         CGFloat yValue = chartData.getData(i).y;
         
-        CGFloat innerGrade = (yValue - _yValueMin) / ( _yValueMax - _yValueMin);
+        CGFloat innerGrade = yValue / _yValueMax;
         
-        CGPoint point = CGPointMake(2*_chartMargin +  (i * _xLabelWidth), _chartCanvasHeight - (innerGrade * _chartCanvasHeight) + ( _yLabelHeight /2 ));
+        CGFloat xPoint = i * xLabelWidth + (xLabelWidth / 2);
+        CGFloat yPoint = _chartCanvasHeight - (innerGrade * _chartCanvasHeight);
+        
+        CGPoint point = CGPointMake(xPoint, yPoint);
         
         if (i > 0) {
             [bezierPath addLineToPoint:point];
@@ -198,10 +177,10 @@
         [bezierPath moveToPoint:point];
         [linePoints addObject:[NSValue valueWithCGPoint:point]];
         
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-        imageView.image = [self createCircleWithSize:imageView.bounds.size andBadgeValue:chartData.getData(i).y];
-        [self addSubview:imageView];
-        imageView.center = point;
+//        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+//        imageView.image = [self createCircleWithSize:imageView.bounds.size andBadgeValue:chartData.getData(i).y];
+//        [self addSubview:imageView];
+//        imageView.center = point;
 
 //        UIView *circleView = [[UIView alloc] initWithFrame:CGRectMake(0,0,15,15)];
 //        circleView.alpha = 1.0;
@@ -242,10 +221,12 @@
         CGFloat yMax = 0.0f;
         CGFloat yMin = MAXFLOAT;
         CGFloat yValue;
+        
         // remove all shape layers before adding new ones
         for (CALayer *layer in self.chartLineArray) {
             [layer removeFromSuperlayer];
         }
+        
         self.chartLineArray = [NSMutableArray arrayWithCapacity:data.count];
         
         for (PNLineChartData *chartData in data) {

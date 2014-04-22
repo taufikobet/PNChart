@@ -29,7 +29,7 @@
         self.backgroundColor = [UIColor whiteColor];
         self.clipsToBounds   = YES;
         _showLabel           = YES;
-        _barBackgroundColor  = PNLightGrey;
+        _barBackgroundColor  = PNWhite;
         _labels              = [NSMutableArray array];
         _bars                = [NSMutableArray array];
     }
@@ -93,32 +93,31 @@
 -(void)strokeChart
 {
     [self viewCleanupForCollection:_bars];
-    CGFloat chartCanvasHeight = self.frame.size.height - chartMargin * 2 - 40.0;
+     
+    CGFloat chartCanvasHeight = self.frame.size.height;
     NSInteger index = 0;
     
-    _xLabelWidth = (self.frame.size.width - chartMargin*2)/[_yValues count];
+    _xLabelWidth = (self.frame.size.width) / [_yValues count];
 
     for (NSString * valueString in _yValues) {
+        
         float value = [valueString floatValue];
 
         float grade = (float)value / (float)_yValueMax;
-		
-        PNBar *bar;
+
+        CGFloat xPoint = (index *  _xLabelWidth);
+        CGFloat yPoint = self.frame.size.height - chartCanvasHeight;
         
-        if (_showLabel) {
-            bar = [[PNBar alloc] initWithFrame:CGRectMake((index *  _xLabelWidth + chartMargin + _xLabelWidth * 0.25), self.frame.size.height - chartCanvasHeight - 30.0, _xLabelWidth * 0.5, chartCanvasHeight)];
-        }else{
-            bar = [[PNBar alloc] initWithFrame:CGRectMake((index *  _xLabelWidth + chartMargin + _xLabelWidth * 0.25), self.frame.size.height - chartCanvasHeight , _xLabelWidth * 0.6, chartCanvasHeight)];
-        }
-        
-        bar.backgroundColor = _barBackgroundColor;
+        PNBar *bar = [[PNBar alloc] initWithFrame:CGRectIntegral(CGRectMake(xPoint, yPoint, _xLabelWidth, chartCanvasHeight))];
+
+        bar.backgroundColor = [UIColor whiteColor];
         bar.barColor = [self barColorAtIndex:index];
         bar.grade = grade;
         
         [_bars addObject:bar];
         [self addSubview:bar];
 
-        index += 1;
+        index++;
     }
 }
 

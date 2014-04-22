@@ -51,7 +51,6 @@
             self.lineChart = [[PNLineChart alloc] initWithFrame:self.view.frame];
             self.lineChart.backgroundColor = [UIColor clearColor];
             self.lineChart.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-            [self.lineChart setXLabels:@[@"NOV",@"DEC",@"JAN",@"FEB"]];
             
             // Line Chart Nr.1
             NSArray * yData = @[@3, @1, @5, @6];
@@ -65,8 +64,6 @@
             
             self.lineChart.chartData = @[data01];
             [self.lineChart strokeChart];
-            
-            self.lineChart.delegate = self;
             
             [self.view addSubview:lineChartLabel];
             [self.view addSubview:self.lineChart];
@@ -90,12 +87,30 @@
             self.barChart.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             [self.barChart setXLabels:@[@"SEP 1",@"SEP 2",@"SEP 3",@"SEP 4",@"SEP 5",@"SEP 6",@"SEP 7"]];
             [self.barChart setYValues:@[@1,@24,@12,@18,@30,@10,@21]];
-            [self.barChart setStrokeColors:@[PNGreen,PNGreen,PNRed,PNGreen,PNGreen,PNYellow,PNGreen]];
+            [self.barChart setStrokeColors:@[PNBlue, PNBlue, PNBlue, PNBlue, PNBlue, PNBlue, PNBlue]];
             
             //[self.view addSubview:barChartLabel];
             [self.view addSubview:self.barChart];
             
             self.title = @"Bar Chart";
+            
+            self.lineChart = [[PNLineChart alloc] initWithFrame:self.view.frame];
+            self.lineChart.backgroundColor = [UIColor clearColor];
+            self.lineChart.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            [self.lineChart setXLabels:@[@"SEP 1",@"SEP 2",@"SEP 3",@"SEP 4",@"SEP 5",@"SEP 6",@"SEP 7"]];
+
+            NSArray * yData = @[@1,@24,@12,@18,@30,@10,@21];
+            PNLineChartData *data01 = [PNLineChartData new];
+            data01.color = PNFreshGreen;
+            data01.itemCount = self.lineChart.xLabels.count;
+            data01.getData = ^(NSUInteger index) {
+                CGFloat yValue = [[yData objectAtIndex:index] floatValue];
+                return [PNLineChartDataItem dataItemWithY:yValue];
+            };
+            
+            self.lineChart.chartData = @[data01];
+            [self.view addSubview:self.lineChart];
+
         }
             break;
         case PCChartTypeCircle:
@@ -135,6 +150,7 @@
     switch (self.chartType) {
         case PCChartTypeBar:
             [self.barChart strokeChart];
+            [self.lineChart strokeChart];
             break;
         case PCChartTypeCircle:
             [self.circleChart strokeChart];
@@ -152,6 +168,7 @@
     switch (self.chartType) {
         case PCChartTypeBar:
             [self.barChart strokeChart];
+            [self.lineChart strokeChart];
             break;
         case PCChartTypeCircle:
             [self.circleChart strokeChart];
