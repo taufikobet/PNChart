@@ -151,7 +151,7 @@
     [self addSubview:self.upperBoundHorizontalLineView];
     
     self.verticalLineView = [[UIView alloc] initWithFrame:CGRectIntegral(CGRectMake(xStartPosition, yStartPosition, 2, chartCanvasHeight))];
-    self.verticalLineView.backgroundColor = [UIColor lightGrayColor];
+    self.verticalLineView.backgroundColor = PNBlue;
     [self addSubview:self.verticalLineView];
 }
 
