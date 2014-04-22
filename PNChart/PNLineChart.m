@@ -143,18 +143,26 @@
     PNLineChartData *chartData = self.chartData.firstObject;
     CAShapeLayer *chartLineShapeLayer = (CAShapeLayer *) self.chartLineArray.firstObject;
 
-    _chartCanvasHeight = self.frame.size.height;
-    _chartCanvasWidth = self.frame.size.width;
-    _chartMargin = 0.0;
+    _chartMargin = 0.85;
+    CGFloat insetMarginPercentage = 0.85;
+    
+    CGFloat chartCanvasWidth = self.frame.size.width * insetMarginPercentage;
+    CGFloat chartCanvasHeight = self.frame.size.height * insetMarginPercentage;
+    _chartCanvasWidth = chartCanvasWidth;
+    _chartCanvasHeight = chartCanvasHeight;
+    
+    CGFloat xStartPosition = ceilf((self.frame.size.width - chartCanvasWidth) / 2);
+    CGFloat yStartPosition = ceilf((self.frame.size.height - chartCanvasHeight) / 2);
     
     UIBezierPath * bezierPath = [UIBezierPath bezierPath];
+    
     [bezierPath setLineWidth:3.0];
     [bezierPath setLineCapStyle:kCGLineCapRound];
     [bezierPath setLineJoinStyle:kCGLineJoinRound];
     
     [_chartPath addObject:bezierPath];
     
-    CGFloat xLabelWidth = (self.frame.size.width) / chartData.itemCount;
+    CGFloat xLabelWidth = chartCanvasWidth / chartData.itemCount;
     NSLog(@"%@", @(xLabelWidth));
     
     NSMutableArray *linePoints = [NSMutableArray array];
@@ -165,8 +173,8 @@
         
         CGFloat innerGrade = yValue / _yValueMax;
         
-        CGFloat xPoint = i * xLabelWidth + (xLabelWidth / 2);
-        CGFloat yPoint = _chartCanvasHeight - (innerGrade * _chartCanvasHeight);
+        CGFloat xPoint = i * xLabelWidth + (xLabelWidth / 2) + xStartPosition;
+        CGFloat yPoint = chartCanvasHeight - (innerGrade * chartCanvasHeight) + yStartPosition;
         
         CGPoint point = CGPointMake(xPoint, yPoint);
         
