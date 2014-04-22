@@ -86,7 +86,7 @@
             self.barChart.backgroundColor = [UIColor clearColor];
             self.barChart.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             [self.barChart setXLabels:@[@"SEP 1",@"SEP 2",@"SEP 3",@"SEP 4",@"SEP 5",@"SEP 6",@"SEP 7"]];
-            [self.barChart setYValues:@[@1,@24,@12,@18,@30,@10,@21]];
+            [self.barChart setYValues:@[@1,@24,@12,@18,@30,@10,@21, @22, @10]];
             [self.barChart setStrokeColors:@[PNBlue, PNBlue, PNBlue, PNBlue, PNBlue, PNBlue, PNBlue]];
             
             //[self.view addSubview:barChartLabel];
@@ -99,10 +99,10 @@
             self.lineChart.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             [self.lineChart setXLabels:@[@"SEP 1",@"SEP 2",@"SEP 3",@"SEP 4",@"SEP 5",@"SEP 6",@"SEP 7"]];
 
-            NSArray * yData = @[@1,@24,@12,@18,@30,@10,@21];
+            NSArray * yData = @[@1,@24,@12,@18,@30,@10,@21, @22, @10];
             PNLineChartData *data01 = [PNLineChartData new];
             data01.color = PNFreshGreen;
-            data01.itemCount = self.lineChart.xLabels.count;
+            data01.itemCount = yData.count;
             data01.getData = ^(NSUInteger index) {
                 CGFloat yValue = [[yData objectAtIndex:index] floatValue];
                 return [PNLineChartDataItem dataItemWithY:yValue];

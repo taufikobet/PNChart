@@ -118,7 +118,7 @@
         CGFloat xPoint = (index * _xLabelWidth) + xStartPosition;
         CGFloat yPoint = self.frame.size.height - chartCanvasHeight - yStartPosition;
         
-        PNBar *bar = [[PNBar alloc] initWithFrame:CGRectIntegral(CGRectMake(xPoint, yPoint, _xLabelWidth, chartCanvasHeight))];
+        PNBar *bar = [[PNBar alloc] initWithFrame:CGRectIntegral(CGRectMake(xPoint + _xLabelWidth/4, yPoint, _xLabelWidth/2, chartCanvasHeight))];
 
         bar.backgroundColor = [UIColor whiteColor];
         bar.barColor = [self barColorAtIndex:index];
@@ -133,6 +133,7 @@
     self.backgroundView = [[UIView alloc] initWithFrame:CGRectMake(xStartPosition, yStartPosition, chartCanvasWidth, chartCanvasHeight)];
     self.backgroundView.backgroundColor = [UIColor redColor];
     self.backgroundView.alpha = 0.5;
+    
     [self addSubview:self.backgroundView];
 }
 
